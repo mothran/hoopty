@@ -39,7 +39,7 @@ def application(environ, start_response):
 
 		<h1>Hoopty Search</h1>
 		<h3>Sorting parameters:</h3>
-		<form name=\"sorting\" action=\"test.wsgi\">
+		<form name=\"sorting\">
 			<table class=\"center\">
 				<tr>
 					<td width=\"50%%\">
