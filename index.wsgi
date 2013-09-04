@@ -6,9 +6,25 @@ import re
 import operator
 from lxml.html.clean import Cleaner
 from cgi import parse_qs, escape
+from os.path import abspath, dirname
 
+# Thanks to: https://wiki.python.org/moin/EscapingHtml
+html_escape_table = {
+	"&": "&amp;",
+	'"': "&quot;",
+	"'": "&apos;",
+	">": "&gt;",
+	"<": "&lt;",
+	"%": "",
+}
+def html_escape(text):
+    """Produce entities within text."""
+    return "".join(html_escape_table.get(c,c) for c in text)
 
 def application(environ, start_response):
+	here = abspath(dirname(__file__))
+	city_fd = open(here + '/tools/cl_cities.html', 'r')
+	city_html = city_fd.read()
 
 	default_html = """<html>
 		<head>
@@ -39,7 +55,7 @@ def application(environ, start_response):
 
 		<h1>Hoopty Search</h1>
 		<h3>Sorting parameters:</h3>
-		<form name=\"sorting\">
+		<form name=\"sorting\" id=\"sorting\">
 			<table class=\"center\">
 				<tr>
 					<td width=\"50%%\">
@@ -54,7 +70,7 @@ def application(environ, start_response):
 						City:
 					</td>
 					<td align=\"right\">
-						<input type=\"text\" name=\"city\" value=\"%s\" /> <br/> 
+						%s 
 					</td>
 				</tr>
 				<tr>
@@ -90,7 +106,8 @@ def application(environ, start_response):
 		</form>"""
 
 	parameters = parse_qs(environ.get('QUERY_STRING', ''))
-	
+	print parameters
+
 	# The only parameter that is NEEDED is 'model', error out if not found
 	if 'model' in parameters and 'city' in parameters:
 		# here use assign a string to be concated into the default html to save peoples
@@ -112,27 +129,35 @@ def application(environ, start_response):
 		# multiple params
 		search_terms = parameters.get('model', [''])
 		city = parameters.get('city', [''])[0]
+		
 		min_price = parameters.get('minprice', [''])[0]
 		max_price = parameters.get('maxprice', [''])[0]
 		
-		# sanitize for XSS and '%'
+		# sanitize for XSS
 		# I need to look over this again.
-		term = escape(search_terms[0], True).strip("%")
-		city = escape(city, True).strip("%")
-		min_price = escape(min_price, True).strip("%")
-		max_price = escape(max_price, True).strip("%")
+		term = html_escape(search_terms[0])
+		city = html_escape(city)
+		min_price = html_escape(min_price)
+		max_price = html_escape(max_price)
 		
+		# find and replace the the city with some 'selected' html
+		#	This is a dirty hack.
+		city_html = city_html.replace(city+"'", city + "' selected")
+
 		# here we input the users values back into the form, the selected[]'s are 
 		# unordered because of the if else block requires that 'owners' be default.
-		default_html = default_html % (term, city, selected[2], selected[0], selected[1], min_price, max_price)
+		default_html = default_html % (term, city_html, selected[2], selected[0], selected[1], min_price, max_price)
 		
 		### Craigslist RSS Search URL ###
-		rss_generic_link = "http://" + urllib.quote(city) + ".craigslist.org/search/%s?query=%s&minAsk=%s&maxAsk=%s&srchType=T&format=rss"
+		rss_generic_link = "http://" + city + ".craigslist.org/search/%s?query=%s&minAsk=%s&maxAsk=%s&srchType=T&format=rss"
 		
 
 		term = urllib.quote(term)
 		#print rss_generic_link
 		#rss_link = rss_generic_link % (listing, term, urllib.quote(min_price), urllib.quote(max_price))
+		print rss_generic_link
+		
+		# we might want to check the .boozo bit and if the RSS url is wrong.
 		rss_link = rss_generic_link % (listing, term, min_price, max_price)
 				
 		# sanitize the html tags besides the listed ones:
@@ -233,14 +258,14 @@ def application(environ, start_response):
 		return [output]
 	elif 'model' in parameters and 'city' not in parameters:
 		status = '200 OK'
-		default_html = default_html % ("", "", "", "", "", "", "5000")
+		default_html = default_html % ("", city_html, "", "", "", "", "5000")
 		default_html += "\n<br><br>\nPlease enter a keyword <b>and</b> city<br>\n</body>\n</div>\n</html>"
 		response_headers = [('Content-Type', 'text/html'), ('Content-Length', str(len(default_html)))]
 		start_response(status, response_headers)
 		return [default_html]
 	else:
 		status = '200 OK'
-		default_html = default_html % ("", "", "", "", "", "", "5000")
+		default_html = default_html % ("", city_html, "", "", "", "", "5000")
 		default_html += "\n<br><br>\n<text>Please enter a keyword and city</text><br>\n</body>\n</div>\n</html>"
 		response_headers = [('Content-Type', 'text/html'), ('Content-Length', str(len(default_html)))]
 		start_response(status, response_headers)
