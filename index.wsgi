@@ -106,7 +106,6 @@ def application(environ, start_response):
 		</form>"""
 
 	parameters = parse_qs(environ.get('QUERY_STRING', ''))
-	print parameters
 
 	# The only parameter that is NEEDED is 'model', error out if not found
 	if 'model' in parameters and 'city' in parameters:
@@ -186,13 +185,24 @@ def application(environ, start_response):
 					else:
 						year = "19" + year
 				else:
-					year = "?"
+					# finally try checking the body
+					year = re.search("(19[0-9]{2}|20[0-9]{2})", text)
+					if year is not None:
+						year = year.group(0)
+					else:
+						year = "?"
 			# grab the mileage.
-			miles = re.search("(([1-9]|[ ])[0-9][0-9](k|K|xx|xxx|XXX|,XXX|(\d|,)[0-9]xx|(\d|,)[0-9]XX|,000|000|thousand miles)|[0-9]{6})", text)
+			miles = re.search("(([1-9]|[ ])[0-9]{2}(k|K|XX|XXX|,XXX|(\d|,)[0-9]XX|,000|000|thousand miles|kms| kms| km)|[0-9]{6}|[0-9]{3},[0-9]{3})", text, re.IGNORECASE)
 			if miles is not None:
 				miles = miles.group(0)
-				# make the output huamn readable.
-				miles = miles[:3] + ",000"
+				# your welcome canada and the rest of the world
+				# do not include 'k' here because it will people saying 100k miles
+				kilo = re.search('(km|kms)', miles, re.IGNORECASE)
+				if kilo is not None:
+					miles = miles[:3] + ",000 km" 
+				# Make the output standardized.
+				else:
+					miles = miles[:3] + ",000"
 			else:
 				mile = ""
 
