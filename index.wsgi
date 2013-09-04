@@ -29,6 +29,9 @@ def application(environ, start_response):
 	default_html = """<html>
 		<head>
 		<title>Hoopty Search</title>
+		<meta name="description" content="HooptySearch - A clean better way to view and search craigslist car and truck listings">
+		<META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+		<meta http-equiv="content-type" content="text/html;charset=UTF-8">
 		</head>
 		<style>
 		body {
@@ -177,7 +180,7 @@ def application(environ, start_response):
 				year = year.group(0)
 			else:
 				#check for 2 digit years
-				year = re.search("([ ]|^)[2-9][0-9]", title)
+				year = re.search("([ ]|^)[4-9][0-9]", title)
 				if year is not None:
 					year = year.group(0)
 					if len(year) > 2:
