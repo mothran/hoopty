@@ -127,14 +127,13 @@ def application(environ, start_response):
 		default_html = default_html % (term, city, selected[2], selected[0], selected[1], min_price, max_price)
 		
 		### Craigslist RSS Search URL ###
-		rss_generic_link = "http://" + urllib.quote(city) + ".craigslist.org/search/%s?query=%s&minAsk=%s&maxAsk=%s&srchType=T"
+		rss_generic_link = "http://" + urllib.quote(city) + ".craigslist.org/search/%s?query=%s&minAsk=%s&maxAsk=%s&srchType=T&format=rss"
 		
 
 		term = urllib.quote(term)
 		#print rss_generic_link
 		#rss_link = rss_generic_link % (listing, term, urllib.quote(min_price), urllib.quote(max_price))
 		rss_link = rss_generic_link % (listing, term, min_price, max_price)
-		rss_link += "&format=rss"
 				
 		# sanitize the html tags besides the listed ones:
 		cleaner = Cleaner(remove_unknown_tags=False, allow_tags=['img', 'p', 'a', 'b', 'em', 'div']);
