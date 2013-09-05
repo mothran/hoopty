@@ -48,7 +48,7 @@ def application(environ, start_response):
 	default_html = """<html>
 		<head>
 		<title>Hoopty Search</title>
-		<meta name="description" content="HooptySearch - A clean better way to view and search craigslist car and truck listings">
+		<meta name="description" content="HooptySearch - A better way to view and search craigslist car/truck listings by year, price and mileage">
 		<META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8">
 		</head>
@@ -224,7 +224,7 @@ def application(environ, start_response):
 					else:
 						year = "?"
 			# grab the mileage.
-			miles = re.search("(([1-9]|[ ])[0-9]{2}(k|K|XX|XXX|,XXX|(\d|,)[0-9]XX|,000|000|thousand miles|kms| kms| km)|[0-9]{6}|[0-9]{3},[0-9]{3})", text, re.IGNORECASE)
+			miles = re.search("(([1-9]|[ ]|[\n])[0-9]{2}(k|K|XX|XXX|,XXX|(\d|,)[0-9]XX|,000|.000|000|thousand miles|kms| kms| km)|[0-9]{3},[0-9]{3})", text, re.IGNORECASE)
 			if miles is not None:
 				miles = miles.group(0)
 				# your welcome canada and the rest of the world
