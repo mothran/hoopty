@@ -308,7 +308,7 @@ def application(environ, start_response):
 	else:
 		status = '200 OK'
 		default_html = default_html % ("", city_html, "", "", "", "", "5000")
-		default_html += "\n<br><br>\n<text>Please enter a keyword and city</text><br>\n</body>\n</div>\n</html>"
+		default_html += "\n<br><br>\n<text>Please enter a keyword and city</text><br><text>To learn more check out <a href=\"https://github.com/mothran/hoopty\"></a></html>\n</body>\n</div>\n</html>"
 		response_headers = [('Content-Type', 'text/html'), ('Content-Length', str(len(default_html)))]
 		start_response(status, response_headers)
 		return [default_html]
