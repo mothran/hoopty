@@ -9,6 +9,5 @@ The tools section contains a dynamically generated bit of html and the tool to g
 You can see a live version at http://hooptysearch.com/
 
 #Dependencies
-python-feedparser
-
-python-lxml
+	python-feedparser
+	python-lxml
