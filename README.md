@@ -11,3 +11,6 @@ You can see a live version at http://hooptysearch.com/
 #Dependencies
 	python-feedparser
 	python-lxml
+
+#Notes on Install
+Remove the google tracking code, until I branch my live site and this FOSS version it will stay there.
