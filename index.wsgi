@@ -293,7 +293,7 @@ def application(environ, start_response):
 			saved_year = entry[3]
 		
 		# clean up and create the return request. 
-		output += "\n<br>\n<text>To learn more check out <a href=\"https://github.com/mothran/hoopty\">https://github.com/mothran/hoopty</a></text></body>\n</div>\n</html>"
+		output += "\n<br>\n</div>\n</body>\n</html>"
 		status = '200 OK'
 		response_headers = [('Content-Type', 'text/html'), ('Content-Length', str(len(output)))]
 		start_response(status, response_headers)
@@ -301,14 +301,14 @@ def application(environ, start_response):
 	elif 'model' in parameters and 'city' not in parameters:
 		status = '200 OK'
 		default_html = default_html % ("", city_html, "", "", "", "", "5000")
-		default_html += "\n<br><br>\nPlease enter a keyword <b>and</b> city<br><text>To learn more check out <a href=\"https://github.com/mothran/hoopty\">https://github.com/mothran/hoopty</a></text>\n</body>\n</div>\n</html>"
+		default_html += "\n<br>\nPlease enter a keyword <b>and</b> city<br><text>To learn more check out <a href=\"https://github.com/mothran/hoopty\">https://github.com/mothran/hoopty</a></text>\n</div></body\n</html>"
 		response_headers = [('Content-Type', 'text/html'), ('Content-Length', str(len(default_html)))]
 		start_response(status, response_headers)
 		return [default_html]
 	else:
 		status = '200 OK'
 		default_html = default_html % ("", city_html, "", "", "", "", "5000")
-		default_html += "\n<br><br>\n<text>Please enter a keyword and city</text><br><text>To learn more check out <a href=\"https://github.com/mothran/hoopty\">https://github.com/mothran/hoopty</a></text>\n</body>\n</div>\n</html>"
+		default_html += "\n<br><br>\n<text>Please enter a keyword and city</text><br><text>To learn more check out <a href=\"https://github.com/mothran/hoopty\">https://github.com/mothran/hoopty</a></text>\n</div></body>\n</html>"
 		response_headers = [('Content-Type', 'text/html'), ('Content-Length', str(len(default_html)))]
 		start_response(status, response_headers)
 		return [default_html]
