@@ -1,3 +1,25 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#    scrape_cities.py
+#
+#    Copyright 2013 W. Parker Thompson <w.parker.thompson@gmail.com>
+#		
+#    This file is part of hooptysearch.
+#
+#    hooptysearch is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    hooptysearch is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with hooptysearch.  If not, see <http://www.gnu.org/licenses/>.
+
 import sys
 import urllib2
 from bs4 import BeautifulSoup
@@ -39,6 +61,6 @@ for nation in nations:
 
 			output = output + options % (url, city)
 
-output = "<select name='city' id='city' form='sorting'>\n<option value=''>SELECT A CITY</option>" + output + "</select>"
+output = "<select name='city' id='city' form='sorting'>\n\t\t\t<option value=''>SELECT A CITY</option>\n" + output + "</select>"
 fd = open('cl_cities.html', 'w')
 fd.write(output)
